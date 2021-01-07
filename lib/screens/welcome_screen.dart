@@ -1,11 +1,29 @@
+import 'package:flash_chat/screens/login_screen.dart';
+import 'package:flash_chat/screens/registration_screen.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import '../Helper Classes.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  static const String id = 'WelcomeScreen' ;
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin{
+  AnimationController controller ;
+  Animation animation ;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        duration: Duration(seconds: 4),
+        vsync : this ,
+    );
+    controller.forward();
+    controller.addListener((){setState(() {});});
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,15 +36,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Container(
-                  child: Image.asset('images/logo.png'),
-                  height: 60.0,
+                Hero(
+                  tag : 'logo' ,
+                  child: Container(
+                    child: Image.asset('images/logo.png'),
+                    height : 60.0,
+                  ),
                 ),
-                Text(
-                  'Flash Chat',
-                  style: TextStyle(
+                TypewriterAnimatedTextKit(
+                  text :['Flash Chat'],
+                  speed: Duration(seconds:1),
+                  textStyle: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
+                    color:Colors.black,
                   ),
                 ),
               ],
@@ -34,45 +57,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             SizedBox(
               height: 48.0,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                elevation: 5.0,
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to login screen.
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'Log In',
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to registration screen.
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'Register',
-                  ),
-                ),
-              ),
-            ),
+            SignInButton(buttonText: 'Log In', buttonColor:Colors.lightBlueAccent ,OnPressed: ()
+              {
+                Navigator.pushNamed(context, LoginScreen.id) ;
+              },),
+            SignInButton(buttonText:'Register' ,buttonColor:Colors.blueAccent , OnPressed: ()
+              {
+                Navigator.pushNamed(context, RegistrationScreen.id) ;
+              },),
+
           ],
         ),
       ),
     );
   }
 }
+
